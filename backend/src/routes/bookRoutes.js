@@ -54,7 +54,7 @@ router.get("/", async (req, res) => {
       .sort({ createdAt: -1 }) //Descending order
       .skip(skip)
       .limit(limit)
-      .population("user", "username profileImage");
+      .populate("user", "username profileImage");
 
     const totalBooks = await Book.countDocuments();
 
@@ -73,6 +73,131 @@ router.get("/", async (req, res) => {
   }
 });
 
-//Delete Book Route
+// Update Book Route
+router.put("/:id", protectRoute, async (req, res) => {
+  try {
+    const bookId = req.params.id;
+    const { title, caption, rating, image } = req.body;
 
+    const book = await Book.findById(bookId);
+
+    if (!book) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
+    }
+
+    // Check ownership
+    if (book.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized to update this book",
+      });
+    }
+
+    let imageUrl = book.image;
+
+    // If new image is provided → delete old + upload new
+    if (image && image !== book.image) {
+      try {
+        // Delete old image
+        const publicId = book.image.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
+
+        // Upload new image
+        const uploadResponse = await cloudinary.uploader.upload(image);
+        imageUrl = uploadResponse.secure_url;
+      } catch (uploadError) {
+        console.log("Cloudinary Update Error:", uploadError);
+      }
+    }
+
+    // Update fields
+    book.title = title || book.title;
+    book.caption = caption || book.caption;
+    book.rating = rating || book.rating;
+    book.image = imageUrl;
+
+    await book.save();
+
+    res.json({
+      success: true,
+      message: "Book updated successfully",
+      book,
+    });
+
+  } catch (error) {
+    console.log("Error in Update Book Route:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server error",
+    });
+  }
+});
+
+// Get Recommended Books by Logged in User
+router.get("/user", protectRoute, async (req, res) => {
+  try {
+    const books = await Book.find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+
+    res.json({
+      success: true,
+      books,
+    });
+  } catch (error) {
+    console.log("Error in Get Recommended Books Route:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server error",
+    });
+  }
+});
+
+//Delete Book Route
+router.delete("/:id", protectRoute, async (req, res) => {
+  try {
+    const bookId = req.params.id;
+    const book = await Book.findById(bookId);
+
+    if (!book) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
+    }
+
+    // Check if the user is the owner of the book
+    if (book.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized to delete this book",
+      });
+    }
+
+    //Delete Image from cloudinary
+    if (book.image && book.image.includes("cloudinary")) {
+      try {
+        const publicId = book.image.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
+      } catch (deleteError) {
+        console.log("Error deleting image from Cloudinary:", deleteError);
+      }
+    }
+
+    await book.deleteOne();
+
+    res.json({
+      success: true,
+      message: "Book deleted successfully",
+    });
+  } catch (error) {
+    console.log("Error in Delete Book Route:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server error",
+    });
+  }
+});
 export default router;
