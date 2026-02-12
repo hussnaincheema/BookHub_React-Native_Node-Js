@@ -2,46 +2,51 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
   Image,
+  TouchableOpacity
 } from "react-native";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
+import Toast from "react-native-toast-message";
+import { useFormik } from "formik";
 import styles from "../../styles/login.styles";
-import COLORS from "../../constants/colors";
 import authService from "../../services/authService";
+import CustomInput from "../../components/CustomInput";
+import CustomButton from "../../components/CustomButton";
+import { loginSchema } from "../../constants/validation";
 
 const Login = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await authService.login({ email, password });
-      Alert.alert("Success", response.message || "Logged in successfully", [
-        { text: "OK", onPress: () => router.replace("/(tabs)") },
-      ]);
-    } catch (error) {
-      Alert.alert("Error", error.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const formik = useFormik({
+    initialValues: { email: "", password: "" },
+    validationSchema: loginSchema,
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        const response = await authService.login(values);
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: response.message || "Logged in successfully",
+        });
+        setTimeout(() => router.replace("/(tabs)"), 1000);
+      } catch (error) {
+        Toast.show({
+          type: "error",
+          text1: "Login Failed",
+          text2: error.message || "Invalid credentials",
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
 
   return (
     <KeyboardAvoidingView
@@ -66,66 +71,36 @@ const Login = () => {
           </View>
 
           <View style={styles.formContainer}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email Address</Text>
-              <View style={styles.inputContainer}>
-                <Ionicons
-                  name="mail-outline"
-                  size={20}
-                  color={COLORS.textSecondary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your email"
-                  placeholderTextColor={COLORS.placeholderText}
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
+            <CustomInput
+              label="Email Address"
+              iconName="mail-outline"
+              placeholder="Enter your email"
+              value={formik.values.email}
+              onChangeText={formik.handleChange("email")}
+              onBlur={formik.handleBlur("email")}
+              error={formik.touched.email && formik.errors.email}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
-              <View style={styles.inputContainer}>
-                <Ionicons
-                  name="lock-closed-outline"
-                  size={20}
-                  color={COLORS.textSecondary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your password"
-                  placeholderTextColor={COLORS.placeholderText}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye-off-outline" : "eye-outline"}
-                    size={20}
-                    color={COLORS.textSecondary}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+            <CustomInput
+              label="Password"
+              iconName="lock-closed-outline"
+              placeholder="Enter your password"
+              value={formik.values.password}
+              onChangeText={formik.handleChange("password")}
+              onBlur={formik.handleBlur("password")}
+              error={formik.touched.password && formik.errors.password}
+              secureTextEntry={!showPassword}
+              isPassword
+              onTogglePassword={() => setShowPassword(!showPassword)}
+            />
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleLogin}
-              disabled={loading}
-            >
-              <Text style={styles.buttonText}>
-                {loading ? "Logging in..." : "Login"}
-              </Text>
-            </TouchableOpacity>
+            <CustomButton
+              title="Login"
+              onPress={formik.handleSubmit}
+              loading={loading}
+            />
           </View>
 
           <View style={styles.footer}>
