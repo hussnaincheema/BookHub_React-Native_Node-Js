@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from "react-native";
 import COLORS from "../constants/colors";
 
-const CustomButton = ({ title, onPress, loading, variant = "primary", style }) => {
+const CustomButton = ({ title, onPress, loading, variant = "primary", style, customStyle }) => {
     const isPrimary = variant === "primary";
 
     return (
@@ -19,7 +19,7 @@ const CustomButton = ({ title, onPress, loading, variant = "primary", style }) =
             {loading ? (
                 <ActivityIndicator color={isPrimary ? COLORS.white : COLORS.primary} />
             ) : (
-                <Text style={[styles.buttonText, isPrimary ? styles.primaryText : styles.outlineText]}>
+                <Text style={[styles.buttonText, isPrimary ? styles.primaryText : styles.outlineText, customStyle]}>
                     {title}
                 </Text>
             )}

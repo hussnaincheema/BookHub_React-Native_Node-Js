@@ -20,8 +20,8 @@ const ConfirmationModal = ({ visible, title, message, onConfirm, onCancel }) => 
                             title="Cancel"
                             onPress={onCancel}
                             style={styles.cancelButton}
-                            textStyle={{ color: COLORS.textPrimary }}
                             isPrimary={false}
+                            customStyle={styles.cancelButtonText}
                         />
                         <CustomButton
                             title="Logout"
@@ -82,7 +82,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: COLORS.inputBorder,
         marginTop: 0,
-        // color: COLORS.black,
+    },
+    cancelButtonText: {
+        color: COLORS.black,
     },
     confirmButton: {
         flex: 1,
