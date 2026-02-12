@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 16,
-    paddingBottom: 80, 
+    paddingBottom: 80,
   },
   header: {
     marginBottom: 20,
@@ -121,6 +121,61 @@ const styles = StyleSheet.create({
   },
   footerLoader: {
     marginVertical: 20,
+  },
+  scrollContainer: {
+    paddingBottom: 20,
+  },
+  greeting: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: COLORS.textPrimary,
+    marginBottom: 4,
+  },
+  profileButton: {
+    padding: 4,
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: COLORS.inputBackground,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingHorizontal: 12,
+    marginHorizontal: 20,
+    marginBottom: 24,
+    height: 50,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    height: "100%",
+    color: COLORS.textDark,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: COLORS.textPrimary,
+  },
+  seeAllText: {
+    color: COLORS.primary,
+    fontWeight: "600",
   },
 });
 

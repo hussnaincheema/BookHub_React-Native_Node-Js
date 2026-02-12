@@ -13,37 +13,31 @@ import {
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-import styles from "../../styles/login.styles"; 
+import styles from "../../styles/login.styles";
 import COLORS from "../../constants/colors";
 import authService from "../../services/authService";
 
-const SignUp = () => {
+const Login = () => {
   const router = useRouter();
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignUp = async () => {
-    if (!username || !email || !password) {
+  const handleLogin = async () => {
+    if (!email || !password) {
       Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
-
-    if (password.length < 6) {
-      Alert.alert("Error", "Password must be at least 6 characters long");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await authService.register({ username, email, password });
-      Alert.alert("Success", response.message || "Account created successfully", [
+      const response = await authService.login({ email, password });
+      Alert.alert("Success", response.message || "Logged in successfully", [
         { text: "OK", onPress: () => router.replace("/(tabs)") },
       ]);
     } catch (error) {
-      Alert.alert("Error", error.message || "Sign up failed");
+      Alert.alert("Error", error.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -59,7 +53,7 @@ const SignUp = () => {
 
         <View style={styles.topIllustration}>
           <Image
-            source={require("../../assets/images/login.png")} // Reusing the same image or add a new one if available
+            source={require("../../assets/images/login.png")}
             style={styles.illustrationImage}
             resizeMode="contain"
           />
@@ -67,31 +61,11 @@ const SignUp = () => {
 
         <View style={styles.card}>
           <View style={styles.header}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Sign up to get started</Text>
+            <Text style={styles.title}>Welcome Back</Text>
+            <Text style={styles.subtitle}>Sign in to continue</Text>
           </View>
 
           <View style={styles.formContainer}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Username</Text>
-              <View style={styles.inputContainer}>
-                <Ionicons
-                  name="person-outline"
-                  size={20}
-                  color={COLORS.textSecondary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your username"
-                  placeholderTextColor={COLORS.placeholderText}
-                  value={username}
-                  onChangeText={setUsername}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Email Address</Text>
               <View style={styles.inputContainer}>
@@ -124,7 +98,7 @@ const SignUp = () => {
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Create a password"
+                  placeholder="Enter your password"
                   placeholderTextColor={COLORS.placeholderText}
                   value={password}
                   onChangeText={setPassword}
@@ -145,19 +119,19 @@ const SignUp = () => {
 
             <TouchableOpacity
               style={styles.button}
-              onPress={handleSignUp}
+              onPress={handleLogin}
               disabled={loading}
             >
               <Text style={styles.buttonText}>
-                {loading ? "Creating Account..." : "Sign Up"}
+                {loading ? "Logging in..." : "Login"}
               </Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account?</Text>
-            <TouchableOpacity onPress={() => router.push("/login")}>
-              <Text style={styles.link}>Login</Text>
+            <Text style={styles.footerText}>Don't have an account?</Text>
+            <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
+              <Text style={styles.link}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -166,4 +140,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;
