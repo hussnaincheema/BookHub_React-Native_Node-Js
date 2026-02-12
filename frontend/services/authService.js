@@ -4,14 +4,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const authService = {
     register: async (userData) => {
         try {
-            const response = await api.post("/auth/register", userData);
+            const isFormData = userData instanceof FormData;
+            const headers = isFormData ? { "Content-Type": "multipart/form-data" } : {};
+
+            const response = await api.post("/auth/register", userData, { headers });
+
             if (response.data.success) {
                 await AsyncStorage.setItem("token", response.data.token);
                 await AsyncStorage.setItem("user", JSON.stringify(response.data.user));
             }
             return response.data;
         } catch (error) {
-            throw error.response?.data || { message: "An error occurred during registration" };
+            throw error.response?.data || { message: error.message || "An error occurred during registration" };
         }
     },
 
@@ -24,7 +28,7 @@ const authService = {
             }
             return response.data;
         } catch (error) {
-            throw error.response?.data || { message: "An error occurred during login" };
+            throw error.response?.data || { message: error.message || "An error occurred during login" };
         }
     },
 

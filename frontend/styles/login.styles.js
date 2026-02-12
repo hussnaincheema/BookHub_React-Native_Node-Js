@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
     elevation: 4,
     borderWidth: 2,
     borderColor: COLORS.border,
-    marginTop: -24,
   },
   header: {
     alignItems: "center",

@@ -6,6 +6,7 @@ import styles from "../../styles/home.styles";
 import COLORS from "../../constants/colors";
 import authService from "../../services/authService";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Home = () => {
     const router = useRouter();
@@ -25,7 +26,7 @@ const Home = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <StatusBar style="dark" />
             <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
                 {/* Header Section */}
@@ -78,7 +79,7 @@ const Home = () => {
                 </View>
 
             </ScrollView>
-        </View>
+        </SafeAreaView>
     );
 };
 
