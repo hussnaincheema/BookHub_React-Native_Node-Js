@@ -41,6 +41,10 @@ const authService = {
         const user = await AsyncStorage.getItem("user");
         return user ? JSON.parse(user) : null;
     },
+
+    getToken: async () => {
+        return await AsyncStorage.getItem("token");
+    },
 };
 
 export default authService;

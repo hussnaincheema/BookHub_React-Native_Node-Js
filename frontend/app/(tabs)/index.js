@@ -20,11 +20,6 @@ const Home = () => {
         loadUser();
     }, []);
 
-    const handleLogout = async () => {
-        await authService.logout();
-        router.replace("/login");
-    };
-
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style="dark" />
@@ -35,12 +30,6 @@ const Home = () => {
                         <Text style={styles.greeting}>Hello, {user?.username || "Guest"} 👋</Text>
                         <Text style={styles.headerSubtitle}>What are you reading today?</Text>
                     </View>
-                    <TouchableOpacity onPress={handleLogout} style={styles.profileButton}>
-                        <Image
-                            source={{ uri: user?.profileImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=Guest" }}
-                            style={styles.profileImage}
-                        />
-                    </TouchableOpacity>
                 </View>
 
                 {/* Search Bar */}

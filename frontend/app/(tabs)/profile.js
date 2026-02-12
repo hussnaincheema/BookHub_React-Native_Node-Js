@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView, Modal } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/colors";
 import authService from "../../services/authService";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Profile = () => {
     const router = useRouter();
