@@ -1,0 +1,21 @@
+import { Link } from "expo-router";
+import { Text, View } from "react-native";
+
+const Index = () => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text>Edit app to edit this screen.</Text>
+
+      <Link href="/(auth)/signup">Sign Up </Link>
+      <Link href="/(auth)" > Login </Link>
+    </View>
+  );
+}
+
+export default Index;
