@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../../styles/home.styles";
 import COLORS from "../../constants/colors";
-import authService from "../../services/authService";
+import { getCurrentUser } from "../../apis/api";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,7 +14,7 @@ const Home = () => {
 
     useEffect(() => {
         const loadUser = async () => {
-            const currentUser = await authService.getCurrentUser();
+            const currentUser = await getCurrentUser();
             setUser(currentUser);
         };
         loadUser();

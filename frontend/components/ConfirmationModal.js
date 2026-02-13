@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     },
     confirmButton: {
         flex: 1,
-        backgroundColor: COLORS.error || "#D32F2F",
+        backgroundColor: COLORS.error || COLORS.primary,
         marginTop: 0,
     }
 });

@@ -16,12 +16,12 @@ import { useFormik } from "formik";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../../styles/login.styles";
-import authService from "../../services/authService";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import SuccessModal from "../../components/SuccessModal";
 import { signupSchema } from "../../constants/validation";
 import COLORS from "../../constants/colors";
+import { register } from "../../apis/api";
 
 const SignUp = () => {
   const router = useRouter();
@@ -67,7 +67,7 @@ const SignUp = () => {
           });
         }
 
-        await authService.register(formData);
+        await register(formData);
         setModalVisible(true);
       } catch (error) {
         Toast.show({

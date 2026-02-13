@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Modal } fr
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/colors";
-import authService from "../../services/authService";
+import { getCurrentUser, logout } from "../../apis/api";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -16,7 +16,7 @@ const Profile = () => {
 
     useEffect(() => {
         const loadUser = async () => {
-            const currentUser = await authService.getCurrentUser();
+            const currentUser = await getCurrentUser();
             setUser(currentUser);
         };
         loadUser();
@@ -28,7 +28,7 @@ const Profile = () => {
 
     const confirmLogout = async () => {
         setLogoutModalVisible(false);
-        await authService.logout();
+        await logout();
         router.replace("/login");
     };
 

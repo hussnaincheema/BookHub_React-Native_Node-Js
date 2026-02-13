@@ -48,8 +48,15 @@ const CustomInput = ({
                     </TouchableOpacity>
                 )}
             </View>
-            {error && <Text style={styles.errorText}>{error}</Text>}
-        </View>
+
+            <View style={styles.errorContainer}>
+                {error ? (
+                    <Text style={styles.errorText}>{error}</Text>
+                ) : (
+                    <Text style={styles.errorPlaceholder}>.</Text>
+                )}
+            </View>
+        </View >
     );
 };
 
@@ -86,10 +93,16 @@ const styles = StyleSheet.create({
     eyeIcon: {
         padding: 8,
     },
+    errorContainer: {
+        height: 20,
+    },
     errorText: {
         color: "red",
         fontSize: 12,
-        marginTop: 4,
+    },
+    errorPlaceholder: {
+        color: "transparent",
+        fontSize: 12,
     },
 });
 

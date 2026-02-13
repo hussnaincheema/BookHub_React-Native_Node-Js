@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator } fr
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import COLORS from "../constants/colors";
-import authService from "../services/authService";
+import { getToken, getCurrentUser } from "../apis/api";
 
 const WelcomeScreen = () => {
   const router = useRouter();
@@ -12,8 +12,8 @@ const WelcomeScreen = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const token = await authService.getToken();
-        const user = await authService.getCurrentUser();
+          const token = await getToken();
+        const user = await getCurrentUser();
 
         if (token && user) {
           router.replace("/(tabs)");
