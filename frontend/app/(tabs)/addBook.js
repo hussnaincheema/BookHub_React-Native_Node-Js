@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, FlatList, ActivityIndicator, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
 import COLORS from "../../constants/colors";
@@ -51,9 +51,11 @@ const MyBooks = () => {
         }
     };
 
-    useEffect(() => {
-        fetchBooks(1);
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchBooks(1, true);
+        }, [])
+    );
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -149,6 +151,7 @@ const MyBooks = () => {
                 visible={deleteModalVisible}
                 title="Delete Book"
                 message="Are you sure you want to delete this book?"
+                confirmText="Delete"
                 onConfirm={confirmDelete}
                 onCancel={() => setDeleteModalVisible(false)}
             />
