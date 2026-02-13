@@ -14,29 +14,33 @@ const CustomInput = ({
     isPassword,
     keyboardType,
     autoCapitalize,
+    onBlur,
     error,
+    ...props
 }) => {
     return (
         <View style={styles.inputGroup}>
             {label && <Text style={styles.label}>{label}</Text>}
-            <View style={[styles.inputContainer, error && styles.inputError]}>
+            <View style={[styles.inputContainer, error && styles.inputError, props.multiline && styles.multilineContainer]}>
                 {iconName && (
                     <Ionicons
                         name={iconName}
                         size={20}
                         color={COLORS.textSecondary}
-                        style={styles.inputIcon}
+                        style={[styles.inputIcon, props.multiline && styles.multilineIcon]}
                     />
                 )}
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, props.multiline && styles.multilineInput]}
                     placeholder={placeholder}
                     placeholderTextColor={COLORS.placeholderText}
                     value={value}
                     onChangeText={onChangeText}
+                    onBlur={onBlur}
                     secureTextEntry={secureTextEntry}
                     keyboardType={keyboardType}
                     autoCapitalize={autoCapitalize}
+                    {...props}
                 />
                 {isPassword && (
                     <TouchableOpacity onPress={onTogglePassword} style={styles.eyeIcon}>
@@ -103,6 +107,18 @@ const styles = StyleSheet.create({
     errorPlaceholder: {
         color: "transparent",
         fontSize: 12,
+    },
+    multilineContainer: {
+        alignItems: "flex-start",
+        paddingTop: 12,
+        minHeight: 100,
+    },
+    multilineInput: {
+        height: "auto",
+        textAlignVertical: "top",
+    },
+    multilineIcon: {
+        marginTop: 2,
     },
 });
 
