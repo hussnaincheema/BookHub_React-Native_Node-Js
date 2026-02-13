@@ -13,10 +13,10 @@ import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
 import { useFormik } from "formik";
 import styles from "../../styles/login.styles";
-import authService from "../../services/authService";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { loginSchema } from "../../constants/validation";
+import { login } from "../../apis/api";
 
 const Login = () => {
   const router = useRouter();
@@ -29,7 +29,7 @@ const Login = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        const response = await authService.login(values);
+        const response = await login(values);
         Toast.show({
           type: "success",
           text1: "Success",
