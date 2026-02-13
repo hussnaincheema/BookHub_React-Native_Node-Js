@@ -2,23 +2,34 @@ import express from "express";
 import cloudinary from "../lib/cloudinary.js";
 import Book from "../models/Book.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
+import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
 //Create Book Route
-router.post("/", protectRoute, async (req, res) => {
+router.post("/", protectRoute, upload.single("image"), async (req, res) => {
   try {
-    const { title, caption, rating, image } = req.body;
-    if (!title || !caption || !rating || !image) {
+    const { title, caption, rating } = req.body;
+    if (!title || !caption || !rating || !req.file) {
       return res.status(400).json({
         success: false,
-        message: "Please Provide all required fields",
+        message: "Please Provide all required fields including an image",
       });
     }
 
-    // Upload image to cloudinary
-    const uploadResponse = await cloudinary.uploader.upload(image);
-    const imageUrl = uploadResponse.secure_url;
+    // Upload image to cloudinary using buffer
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "bookhub_books" },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(req.file.buffer);
+    });
+
+    const imageUrl = result.secure_url;
 
     // Save to the database
     const newBook = new Book({
@@ -74,10 +85,10 @@ router.get("/", async (req, res) => {
 });
 
 // Update Book Route
-router.put("/:id", protectRoute, async (req, res) => {
+router.put("/:id", protectRoute, upload.single("image"), async (req, res) => {
   try {
     const bookId = req.params.id;
-    const { title, caption, rating, image } = req.body;
+    const { title, caption, rating } = req.body;
 
     const book = await Book.findById(bookId);
 
@@ -98,16 +109,27 @@ router.put("/:id", protectRoute, async (req, res) => {
 
     let imageUrl = book.image;
 
-    // If new image is provided → delete old + upload new
-    if (image && image !== book.image) {
+    // If new image file is provided → delete old + upload new
+    if (req.file) {
       try {
-        // Delete old image
-        const publicId = book.image.split("/").pop().split(".")[0];
-        await cloudinary.uploader.destroy(publicId);
+        // Delete old image if it exists on Cloudinary
+        if (book.image && book.image.includes("cloudinary")) {
+          const publicId = book.image.split("/").pop().split(".")[0];
+          await cloudinary.uploader.destroy(publicId);
+        }
 
-        // Upload new image
-        const uploadResponse = await cloudinary.uploader.upload(image);
-        imageUrl = uploadResponse.secure_url;
+        // Upload new image from buffer
+        const result = await new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: "bookhub_books" },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            }
+          );
+          uploadStream.end(req.file.buffer);
+        });
+        imageUrl = result.secure_url;
       } catch (uploadError) {
         console.log("Cloudinary Update Error:", uploadError);
       }
@@ -139,12 +161,23 @@ router.put("/:id", protectRoute, async (req, res) => {
 // Get Recommended Books by Logged in User
 router.get("/user", protectRoute, async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
     const books = await Book.find({ user: req.user._id })
       .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalBooks = await Book.countDocuments({ user: req.user._id });
 
     res.json({
       success: true,
       books,
+      currentPage: page,
+      totalBooks,
+      totalPages: Math.ceil(totalBooks / limit),
     });
   } catch (error) {
     console.log("Error in Get Recommended Books Route:", error);
