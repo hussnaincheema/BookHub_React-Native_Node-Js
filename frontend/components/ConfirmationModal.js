@@ -3,7 +3,15 @@ import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../constants/colors";
 import CustomButton from "./CustomButton";
 
-const ConfirmationModal = ({ visible, title, message, onConfirm, onCancel }) => {
+const ConfirmationModal = ({
+    visible,
+    title,
+    message,
+    onConfirm,
+    onCancel,
+    confirmText = "Confirm",
+    cancelText = "Cancel"
+}) => {
     return (
         <Modal transparent visible={visible} animationType="fade" onRequestClose={onCancel}>
             <View style={styles.overlay}>
@@ -16,14 +24,14 @@ const ConfirmationModal = ({ visible, title, message, onConfirm, onCancel }) => 
 
                     <View style={styles.buttonContainer}>
                         <CustomButton
-                            title="Cancel"
+                            title={cancelText}
                             onPress={onCancel}
                             style={styles.cancelButton}
                             isPrimary={false}
                             customStyle={styles.cancelButtonText}
                         />
                         <CustomButton
-                            title="Logout"
+                            title={confirmText}
                             onPress={onConfirm}
                             style={styles.confirmButton}
                         />

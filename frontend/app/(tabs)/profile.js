@@ -95,6 +95,7 @@ const Profile = () => {
                 visible={logoutModalVisible}
                 title="Logout"
                 message="Are you sure you want to logout?"
+                confirmText="Logout"
                 onConfirm={confirmLogout}
                 onCancel={() => setLogoutModalVisible(false)}
             />
