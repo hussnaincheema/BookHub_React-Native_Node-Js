@@ -137,3 +137,95 @@ export const getSession = async () => {
         return { token: null, user: null };
     }
 };
+// Book APIs
+//@author Hussnain
+export const createBook = async (bookData) => {
+    try {
+        const token = await getToken();
+        // Check if it's formData (for image upload)
+        const isFormData = bookData instanceof FormData;
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": isFormData ? "multipart/form-data" : "application/json",
+        };
+
+        const res = await axios.post(`${BASE_URL}/books`, bookData, {
+            headers: headers,
+        });
+
+        return res.data;
+    } catch (e) {
+        if (e.response && e.response.data) {
+            throw e.response.data;
+        }
+        throw e;
+    }
+};
+
+export const getBooks = async (page = 1, limit = 10) => {
+    try {
+        const res = await axios.get(`${BASE_URL}/books?page=${page}&limit=${limit}`);
+        return res.data;
+    } catch (e) {
+        if (e.response && e.response.data) {
+            throw e.response.data;
+        }
+        throw e;
+    }
+};
+
+export const getUserBooks = async (page = 1, limit = 10) => {
+    try {
+        const token = await getToken();
+        const res = await axios.get(`${BASE_URL}/books/user?page=${page}&limit=${limit}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data;
+    } catch (e) {
+        if (e.response && e.response.data) {
+            throw e.response.data;
+        }
+        throw e;
+    }
+};
+
+export const updateBook = async (id, bookData) => {
+    try {
+        const token = await getToken();
+        const isFormData = bookData instanceof FormData;
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": isFormData ? "multipart/form-data" : "application/json",
+        };
+
+        const res = await axios.put(`${BASE_URL}/books/${id}`, bookData, {
+            headers: headers,
+        });
+
+        return res.data;
+    } catch (e) {
+        if (e.response && e.response.data) {
+            throw e.response.data;
+        }
+        throw e;
+    }
+};
+
+export const deleteBook = async (id) => {
+    try {
+        const token = await getToken();
+        const res = await axios.delete(`${BASE_URL}/books/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data;
+    } catch (e) {
+        if (e.response && e.response.data) {
+            throw e.response.data;
+        }
+        throw e;
+    }
+};
