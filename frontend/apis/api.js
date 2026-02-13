@@ -28,6 +28,11 @@ export const register = async (userData) => {
         const res = await axios.post(`${BASE_URL}/auth/register`, userData, {
             headers: headers,
         });
+
+        if (res.data.success) {
+            await storeSession(res.data.token, res.data.user);
+        }
+
         return res.data;
     } catch (e) {
         if (e.response) {
@@ -52,6 +57,10 @@ export const login = async (credentials) => {
                 Accept: 'application/json',
             },
         });
+
+        if (res.data.success) {
+            await storeSession(res.data.token, res.data.user);
+        }
 
         return res.data;
     } catch (e) {
