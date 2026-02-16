@@ -16,12 +16,14 @@ const Home = () => {
     const router = useRouter();
     const [user, setUser] = useState(null);
     const [books, setBooks] = useState([]);
+    const [allBooks, setAllBooks] = useState([]); // Store all books for search
     const [featuredBooks, setFeaturedBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const loadUser = async () => {
@@ -44,13 +46,16 @@ const Home = () => {
             if (response.success) {
                 if (pageNum === 1) {
                     setBooks(response.books);
+                    setAllBooks(response.books); // Store all books
                     // Set featured books as the first 5 books with highest ratings
                     const featured = [...response.books]
                         .sort((a, b) => b.rating - a.rating)
                         .slice(0, 5);
                     setFeaturedBooks(featured);
                 } else {
-                    setBooks(prev => [...prev, ...response.books]);
+                    const newBooks = [...books, ...response.books];
+                    setBooks(newBooks);
+                    setAllBooks(newBooks); // Update all books
                 }
                 setHasMore(response.currentPage < response.totalPages);
             }
@@ -74,10 +79,33 @@ const Home = () => {
     };
 
     const handleLoadMore = () => {
-        if (!loadingMore && hasMore) {
+        if (!loadingMore && hasMore && !searchQuery) {
             const nextPage = page + 1;
             setPage(nextPage);
             fetchBooks(nextPage);
+        }
+    };
+
+    const handleSearch = (text) => {
+        setSearchQuery(text);
+        if (text.trim() === "") {
+            // Reset to all books when search is cleared
+            setBooks(allBooks);
+            const featured = [...allBooks]
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 5);
+            setFeaturedBooks(featured);
+        } else {
+            // Filter books by title (case-insensitive)
+            const filtered = allBooks.filter(book =>
+                book.title.toLowerCase().includes(text.toLowerCase())
+            );
+            setBooks(filtered);
+            // Update featured books based on filtered results
+            const featured = [...filtered]
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 5);
+            setFeaturedBooks(featured);
         }
     };
 
@@ -96,9 +124,18 @@ const Home = () => {
                 <Ionicons name="search" size={20} color={COLORS.textSecondary} style={styles.searchIcon} />
                 <TextInput
                     style={styles.searchInput}
-                    placeholder="Search for books, authors..."
+                    placeholder="Search for books..."
                     placeholderTextColor={COLORS.placeholderText}
+                    value={searchQuery}
+                    onChangeText={handleSearch}
+                    autoCapitalize="none"
+                    autoCorrect={false}
                 />
+                {searchQuery.length > 0 && (
+                    <TouchableOpacity onPress={() => handleSearch("")} style={styles.clearButton}>
+                        <Ionicons name="close-circle" size={20} color={COLORS.textSecondary} />
+                    </TouchableOpacity>
+                )}
             </View>
 
             {/* Featured Section */}
