@@ -17,14 +17,20 @@ const BookCard = ({ book, onEdit, onDelete }) => {
                 </View>
                 <Text style={styles.caption} numberOfLines={2}>{book.caption}</Text>
 
-                <View style={styles.actions}>
-                    <TouchableOpacity onPress={() => onEdit(book)} style={styles.actionButton}>
-                        <Ionicons name="pencil-outline" size={20} color={COLORS.primary} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => onDelete(book._id)} style={styles.actionButton}>
-                        <Ionicons name="trash-outline" size={20} color={COLORS.error} />
-                    </TouchableOpacity>
-                </View>
+                {(onEdit || onDelete) && (
+                    <View style={styles.actions}>
+                        {onEdit && (
+                            <TouchableOpacity onPress={() => onEdit(book)} style={styles.actionButton}>
+                                <Ionicons name="pencil-outline" size={20} color={COLORS.primary} />
+                            </TouchableOpacity>
+                        )}
+                        {onDelete && (
+                            <TouchableOpacity onPress={() => onDelete(book._id)} style={styles.actionButton}>
+                                <Ionicons name="trash-outline" size={20} color={COLORS.error} />
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                )}
             </View>
         </View>
     );
