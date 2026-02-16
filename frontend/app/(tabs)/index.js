@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity, TextInput, ActivityIndicator } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
@@ -109,35 +109,8 @@ const Home = () => {
         }
     };
 
-    const renderHeader = () => (
+    const renderHeader = useCallback(() => (
         <>
-            {/* Header Section */}
-            <View style={styles.header}>
-                <View>
-                    <Text style={styles.greeting}>Hello, {user?.username || "Guest"} 👋</Text>
-                    <Text style={styles.headerSubtitle}>What are you reading today?</Text>
-                </View>
-            </View>
-
-            {/* Search Bar */}
-            <View style={styles.searchContainer}>
-                <Ionicons name="search" size={20} color={COLORS.textSecondary} style={styles.searchIcon} />
-                <TextInput
-                    style={styles.searchInput}
-                    placeholder="Search for books..."
-                    placeholderTextColor={COLORS.placeholderText}
-                    value={searchQuery}
-                    onChangeText={handleSearch}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-                {searchQuery.length > 0 && (
-                    <TouchableOpacity onPress={() => handleSearch("")} style={styles.clearButton}>
-                        <Ionicons name="close-circle" size={20} color={COLORS.textSecondary} />
-                    </TouchableOpacity>
-                )}
-            </View>
-
             {/* Featured Section */}
             {featuredBooks.length > 0 && (
                 <>
@@ -167,7 +140,7 @@ const Home = () => {
                 </TouchableOpacity>
             </View>
         </>
-    );
+    ), [featuredBooks, router]);
 
     const renderFooter = () => {
         if (!loadingMore) return null;
@@ -186,6 +159,34 @@ const Home = () => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style="dark" />
+
+            {/* Header Section */}
+            <View style={styles.header}>
+                <View>
+                    <Text style={styles.greeting}>Hello, {user?.username || "Guest"} 👋</Text>
+                    <Text style={styles.headerSubtitle}>What are you reading today?</Text>
+                </View>
+            </View>
+
+            {/* Search Bar */}
+            <View style={styles.searchContainer}>
+                <Ionicons name="search" size={20} color={COLORS.textSecondary} style={styles.searchIcon} />
+                <TextInput
+                    style={styles.searchInput}
+                    placeholder="Search for books..."
+                    placeholderTextColor={COLORS.placeholderText}
+                    value={searchQuery}
+                    onChangeText={handleSearch}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+                {searchQuery.length > 0 && (
+                    <TouchableOpacity onPress={() => handleSearch("")} style={styles.clearButton}>
+                        <Ionicons name="close-circle" size={20} color={COLORS.textSecondary} />
+                    </TouchableOpacity>
+                )}
+            </View>
+
             <FlatList
                 data={books}
                 keyExtractor={(item) => item._id}
@@ -196,6 +197,7 @@ const Home = () => {
                 showsVerticalScrollIndicator={false}
                 refreshing={refreshing}
                 onRefresh={onRefresh}
+                keyboardShouldPersistTaps="handled"
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}
                 ListFooterComponent={renderFooter}
