@@ -177,6 +177,10 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "600",
   },
+  featuredList: {
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+  },
 });
 
 export default styles;
