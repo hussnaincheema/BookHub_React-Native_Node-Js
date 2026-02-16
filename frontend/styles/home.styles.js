@@ -181,6 +181,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 16,
   },
+  clearButton: {
+    padding: 4,
+  },
 });
 
 export default styles;
