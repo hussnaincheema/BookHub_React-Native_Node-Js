@@ -106,7 +106,7 @@ const Home = () => {
                 <>
                     <View style={styles.sectionHeader}>
                         <Text style={styles.sectionTitle}>Featured Books</Text>
-                        <TouchableOpacity onPress={() => router.push("/(tabs)/addBooks")}>
+                        <TouchableOpacity onPress={() => router.push("/addBook")}>
                             <Text style={styles.seeAllText}>See All</Text>
                         </TouchableOpacity>
                     </View>
@@ -125,7 +125,7 @@ const Home = () => {
             {/* New Arrivals Section Header */}
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>New Arrivals</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => router.push("/addBook")}>
                     <Text style={styles.seeAllText}>See All</Text>
                 </TouchableOpacity>
             </View>
