@@ -57,11 +57,11 @@ router.post("/", protectRoute, upload.single("image"), async (req, res) => {
 // Get Books Route
 router.get("/", async (req, res) => {
   try {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 5;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const books = (await Book.find())
+    const books = await Book.find()
       .sort({ createdAt: -1 }) //Descending order
       .skip(skip)
       .limit(limit)
@@ -69,7 +69,8 @@ router.get("/", async (req, res) => {
 
     const totalBooks = await Book.countDocuments();
 
-    res.send({
+    res.json({
+      success: true,
       books,
       currentPage: page,
       totalBooks,
