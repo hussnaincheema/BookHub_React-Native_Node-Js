@@ -5,7 +5,9 @@ This project demonstrates a complete CRUD (Create, Read, Update, Delete) system 
 
 The application includes secure user authentication and a REST API built with Express.js and MongoDB, allowing users to register, login, and perform book management operations such as adding, updating, viewing, and deleting books.
 
-🚀 Tech Stack
+---
+
+## 🚀 Tech Stack
 
 Frontend:
 
