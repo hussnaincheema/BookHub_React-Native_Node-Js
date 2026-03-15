@@ -9,7 +9,7 @@ The application includes secure user authentication and a REST API built with Ex
 
 ## 🚀 Tech Stack
 
-Frontend:
+## Frontend:
 
 React Native
 
@@ -21,7 +21,7 @@ React Navigation
 
 Axios (API Integration)
 
-Backend:
+## Backend:
 
 Node.js
 
@@ -31,7 +31,7 @@ MongoDB
 
 Mongoose
 
-Tools:
+## Tools:
 
 Git & GitHub
 
@@ -39,7 +39,9 @@ Postman (API Testing)
 
 MongoDB Compass
 
-✨ Features
+---
+
+## ✨ Features
 
 User Registration
 
@@ -59,12 +61,15 @@ Secure authentication using JWT
 
 Clean and scalable project structure
 
-📱 App Sections
-🔐 Authentication
+---
+
+## 📱 App Sections
+
+## 🔐 Authentication
 
 The authentication section allows users to create accounts and securely log into the application.
 
-Features include:
+## Features include:
 
 User registration
 
@@ -74,11 +79,11 @@ JWT-based authentication
 
 Protected routes for authenticated users
 
-📚 Book List
+## 📚 Book List
 
 This section displays all books stored in the database.
 
-Features:
+## Features:
 
 Fetch books from MongoDB
 
@@ -88,7 +93,7 @@ Dynamic data rendering
 
 Real-time updates after CRUD operations
 
-➕ Add Book
+## ➕ Add Book
 
 Users can add new books to the system by entering details such as:
 
@@ -100,7 +105,7 @@ Description
 
 Category
 
-✏️ Update Book
+## ✏️ Update Book
 
 Users can edit existing book information when required.
 
@@ -114,15 +119,15 @@ Description
 
 Category
 
-🗑 Delete Book
+## 🗑 Delete Book
 
 Users can remove books from the system with a delete option, allowing them to manage their book collection efficiently.
 
-📞 API Integration
+## 📞 API Integration
 
 The application communicates with a Node.js Express backend API responsible for handling authentication and book management operations.
 
-Features:
+## Features:
 
 RESTful API architecture
 
