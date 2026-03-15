@@ -1,4 +1,4 @@
-📚 BookHub – Full Stack Book Management App
+## 📚 BookHub – Full Stack Book Management App
 
 A modern mobile application built with React Native, Tailwind CSS (NativeWind), Node.js, and MongoDB.
 This project demonstrates a complete CRUD (Create, Read, Update, Delete) system where users can manage their book collection.
